@@ -16,7 +16,6 @@ const init = require('./init');
     const diffs = diff.run();
 
     const mailer = require('./mailer');
-    const { run } = require('./crawl');
 
     if (!diffs) {
         const message = "There was an error while comparing differences!";
@@ -30,7 +29,7 @@ const init = require('./init');
 
         console.log("Sending email");
 
-        mailer.mailOpportunities(diffs);
+        await mailer.mailOpportunities(diffs);
     }
 
     console.log("Latest list becomes the previous");

@@ -23,8 +23,5 @@ COPY ./src .
 # RUN set +x && \
 #   npm run test-build
 
-# EXPOSE 8080
-# EXPOSE 8081
-
 # At container start, run this command
 CMD [ "npm", "run", "start" ]

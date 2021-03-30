@@ -7,8 +7,9 @@ Settings are defined as env variables. They can be defined using an .env file or
 
 * CRON_EXPRESSION - cron expression to define how often the crawler should run
 * URL_TO_CRAWL - URL to be crawled
+* DOWNLOADS_PATH - where the downloaded .html files, previous.txt, latest.txt will be stored
 
-### mail settings
+### Mail settings
 
 * MAIL_USER - user name for the SMTP server
 * MAIL_PASS - password for the SMTP server
