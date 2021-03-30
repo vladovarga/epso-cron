@@ -11,6 +11,8 @@ Settings are defined as env variables. They can be defined using an .env file or
 
 ### Mail settings
 
+* MAIL_HOST - SMTP server host
+* MAIL_PORT - SMTP server port
 * MAIL_USER - user name for the SMTP server
 * MAIL_PASS - password for the SMTP server
 * MAIL_TO - email addresses to notify. Separated by comma

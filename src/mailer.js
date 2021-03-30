@@ -52,11 +52,13 @@ async function mailError() {
  */
 async function _mail(sendMailInput) {
   // console.log("mail", arguments);
-  
+  console.log("Using SMTP host:", process.env.MAIL_HOST);
+  console.log("Using SMTP login:", process.env.MAIL_USER);
+
   // create reusable transporter object using the default SMTP transport
   let transporter = nodemailer.createTransport({
-    host: "smtp.gmail.com",
-    port: 587,
+    host: process.env.MAIL_HOST,
+    port: process.env.MAIL_PORT,
     secure: false, // true for 465, false for other ports
     auth: {
         user: process.env.MAIL_USER,
