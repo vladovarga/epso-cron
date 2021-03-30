@@ -1,32 +1,41 @@
-console.log("Running crawler");
+console.log("Initializing ...");
 
-const crawl = require('./crawl');
+const init = require('./init');
 
-console.log("Running diff");
+(async function() {
+    console.log("Running crawler");
 
-const diff = require('./diff');
+    const crawl = require('./crawl');
 
-const diffs = diff.run();
+    const crawlOutput = await crawl.run();
 
-const mailer = require('./mailer');
+    console.log("Running diff");
 
-if (!diffs) {
-    const message = "There was an error while comparing differences!";
-    console.error(message, diffs);
-    mailer.mailError();
-    throw new Error(message);
-} else if (diffs.length == 0) {
-    console.log("There were no new job opportunities");
-} else if (diffs.length > 0) {
-    console.log("There are new opportunities!!", diffs);
+    const diff = require('./diff');
 
-    console.log("Sending email");
+    const diffs = diff.run();
 
-    mailer.mail(diffs);
+    const mailer = require('./mailer');
+    const { run } = require('./crawl');
+
+    if (!diffs) {
+        const message = "There was an error while comparing differences!";
+        console.error(message, diffs);
+        mailer.mailError();
+        throw new Error(message);
+    } else if (diffs.length == 0) {
+        console.log("There were no new job opportunities");
+    } else if (diffs.length > 0) {
+        console.log("There are new opportunities!!", diffs);
+
+        console.log("Sending email");
+
+        mailer.mailOpportunities(diffs);
+    }
 
     console.log("Latest list becomes the previous");
 
     const fs = require('fs');
     
     fs.copyFileSync('downloads/latest.txt', 'downloads/previous.txt');
-}
+}) ();
