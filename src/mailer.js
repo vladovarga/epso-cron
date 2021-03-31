@@ -23,6 +23,7 @@ async function mailOpportunities(newJobOpportunities) {
   html += "</ul>";
 
   // send email
+  console.log("Sending email to:",  process.env.MAIL_TO);
   
   return await _mail({
     to: process.env.MAIL_TO,
@@ -53,6 +54,7 @@ async function mailError() {
 async function _mail(sendMailInput) {
   // console.log("mail", arguments);
   console.log("Using SMTP host:", process.env.MAIL_HOST);
+  console.log("Using SMTP port:", process.env.MAIL_PORT);
   console.log("Using SMTP login:", process.env.MAIL_USER);
 
   // create reusable transporter object using the default SMTP transport

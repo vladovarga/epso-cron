@@ -2,7 +2,29 @@ console.log("Initializing ...");
 
 const init = require('./init');
 
-(async function() {
+const cron = require('node-cron');
+
+console.log('Used cron expression', process.env.CRON_EXPRESSION);
+
+const validateOutput = cron.validate(process.env.CRON_EXPRESSION);
+
+if (!validateOutput) {
+    const msg = "Cron expression is not valid!";
+    console.error(msg, process.env.CRON_EXPRESSION);
+    throw new Error(msg);
+}
+
+console.log('Cron expression is valid');
+
+cron.schedule(process.env.CRON_EXPRESSION, () => {
+    console.log('Running cron job');
+
+    job();
+}, {
+    timezone: "Europe/Bratislava"
+});
+
+async function job() {
     console.log("Running crawler");
 
     const crawl = require('./crawl');
@@ -37,4 +59,4 @@ const init = require('./init');
     const fs = require('fs');
     
     fs.copyFileSync('downloads/latest.txt', 'downloads/previous.txt');
-}) ();
+}
