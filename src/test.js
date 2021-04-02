@@ -12,7 +12,7 @@ async function run () {
         console.error(verifyOutput);
         throw new Error(verifyOutput);
     } else {
-        console.log("SMTP connection verified successfuly");
+        console.log("SMTP connection verified successfully");
     }
 
     console.log("Sending test email ...");
@@ -28,7 +28,7 @@ async function run () {
         console.error(mailOutput);
         throw new Error(mailOutput);
     } else {
-        console.log("Test email sent successfuly");
+        console.log("Test email sent successfully");
     }
 };
 

@@ -1,7 +1,7 @@
 /**
  * Initializes the environment - checks for downloads folder, previous.txt, ...
  */
-(function () {
+async function run() {
     require('dotenv-defaults').config();
     const fs = require('fs');
 
@@ -27,11 +27,25 @@
         console.log('previous.txt file exists!');
     } catch (err) {
         console.info('previous.txt file does not exist! Creating one ...');
+
         try {
             fs.writeFileSync(process.env.DOWNLOADS_PATH  + 'previous.txt', "");
+
+            // crawl the data for the first time //
+            const crawl = require('./crawl');
+
+            const crawlOutput = await crawl.run();
+
+            console.log("Latest list becomes the previous");
+            
+            fs.copyFileSync(process.env.DOWNLOADS_PATH + 'latest.txt', process.env.DOWNLOADS_PATH + 'previous.txt');
         } catch (err) {
             console.error('previous.txt file could not be created!', err);
             throw err;
         }
     }
-})();
+}
+
+module.exports = {
+    "run": run
+};
