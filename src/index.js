@@ -1,3 +1,7 @@
+console.log("Testing ...");
+
+require('./test');
+
 console.log("Initializing ...");
 
 const init = require('./init');
