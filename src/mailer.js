@@ -103,7 +103,7 @@ class Mailer {
 
     // send mail with defined transport object
     let info = await this.transporter.sendMail({
-      from: '"Vlado\'s EPSO cron 🐤" <foo@example.com>',  // sender address
+      from: '"Vlado\'s EPSO cron 🐤" <no-reply@janevjem.us>',  // sender address
       to: sendMailInput.to,                               // list of receivers
       subject: sendMailInput.subject,
       text: sendMailInput.text,                           // plain text body

@@ -56,7 +56,7 @@
         } else if (diffs.length > 0) {
             console.log("There are new opportunities!!", diffs);
 
-            console.log("Sending email");
+            console.log("Sending emails ... ");
 
             await mailer.mailOpportunities(diffs);
         }
