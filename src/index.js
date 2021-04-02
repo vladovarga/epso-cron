@@ -1,66 +1,70 @@
-console.log("Testing ...");
+(async function() {
+    console.log("Testing ...");
 
-require('./test');
+    const test = require('./test');
 
-console.log("Initializing ...");
+    await test.run();
 
-const init = require('./init');
+    console.log("Initializing ...");
 
-const cron = require('node-cron');
+    const init = require('./init');
 
-console.log('Used cron expression', process.env.CRON_EXPRESSION);
+    const cron = require('node-cron');
 
-const validateOutput = cron.validate(process.env.CRON_EXPRESSION);
+    console.log('Used cron expression', process.env.CRON_EXPRESSION);
 
-if (!validateOutput) {
-    const msg = "Cron expression is not valid!";
-    console.error(msg, process.env.CRON_EXPRESSION);
-    throw new Error(msg);
-}
+    const validateOutput = cron.validate(process.env.CRON_EXPRESSION);
 
-console.log('Cron expression is valid');
-
-cron.schedule(process.env.CRON_EXPRESSION, () => {
-    console.log('Running cron job');
-
-    job();
-}, {
-    timezone: "Europe/Bratislava"
-});
-
-async function job() {
-    console.log("Running crawler");
-
-    const crawl = require('./crawl');
-
-    const crawlOutput = await crawl.run();
-
-    console.log("Running diff");
-
-    const diff = require('./diff');
-
-    const diffs = diff.run();
-
-    const mailer = require('./mailer');
-
-    if (!diffs) {
-        const message = "There was an error while comparing differences!";
-        console.error(message, diffs);
-        mailer.mailError();
-        throw new Error(message);
-    } else if (diffs.length == 0) {
-        console.log("There were no new job opportunities");
-    } else if (diffs.length > 0) {
-        console.log("There are new opportunities!!", diffs);
-
-        console.log("Sending email");
-
-        await mailer.mailOpportunities(diffs);
+    if (!validateOutput) {
+        const msg = "Cron expression is not valid!";
+        console.error(msg, process.env.CRON_EXPRESSION);
+        throw new Error(msg);
     }
 
-    console.log("Latest list becomes the previous");
+    console.log('Cron expression is valid');
 
-    const fs = require('fs');
-    
-    fs.copyFileSync('downloads/latest.txt', 'downloads/previous.txt');
-}
+    cron.schedule(process.env.CRON_EXPRESSION, () => {
+        console.log('Running cron job');
+
+        job();
+    }, {
+        timezone: "Europe/Bratislava"
+    });
+
+    async function job() {
+        console.log("Running crawler");
+
+        const crawl = require('./crawl');
+
+        const crawlOutput = await crawl.run();
+
+        console.log("Running diff");
+
+        const diff = require('./diff');
+
+        const diffs = diff.run();
+
+        const mailer = require('./mailer');
+
+        if (!diffs) {
+            const message = "There was an error while comparing differences!";
+            console.error(message, diffs);
+            mailer.mailError();
+            throw new Error(message);
+        } else if (diffs.length == 0) {
+            console.log("There were no new job opportunities");
+        } else if (diffs.length > 0) {
+            console.log("There are new opportunities!!", diffs);
+
+            console.log("Sending email");
+
+            await mailer.mailOpportunities(diffs);
+        }
+
+        console.log("Latest list becomes the previous");
+
+        const fs = require('fs');
+        
+        fs.copyFileSync('downloads/latest.txt', 'downloads/previous.txt');
+    }
+}) ();

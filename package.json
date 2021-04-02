@@ -4,7 +4,7 @@
   "description": "Cron job that downloads the list of available jobs from the https://epso.europa.eu/job-opportunities website, compares them with the previous download and in a case of differences sends an email.",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "node src/test.js",
     "start": "node src/index.js"
   },
   "keywords": [

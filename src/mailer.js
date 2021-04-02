@@ -48,16 +48,10 @@ class Mailer {
 
   /**
    * Verifies the SMTP connection
+   * @return {Promise} promise that resolves true if everything is fine
    */
   verify() {
-    this.transporter.verify(function(error, success) {
-      if (error) {
-        console.log(error);
-        throw new Error(error);
-      } else {
-        console.log("Server is ready to take our messages");
-      }
-    });
+    return this.transporter.verify();
   }
   
   /**
