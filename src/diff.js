@@ -6,7 +6,7 @@
 function run() {
     const Diff = require('diff');
     const fs = require('fs');
-    const mailer = require('./mailer');
+    const { mailer } = require('./mailer');
 
     // read latest.txt from this cron run
     let latest = fs.readFileSync(process.env.DOWNLOADS_PATH + 'latest.txt', 'utf8', (err, data) => {

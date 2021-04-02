@@ -7,7 +7,7 @@ function getPromise() {
         require('dotenv-defaults').config();
 
         const https = require('https');
-        const mailer = require('./mailer');
+        const { mailer } = require('./mailer');
 
         // start a GET request for URL_TO_CRAWL
 

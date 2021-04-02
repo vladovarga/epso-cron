@@ -44,7 +44,7 @@
 
         const diffs = diff.run();
 
-        const mailer = require('./mailer');
+        const { mailer } = require('./mailer');
 
         if (!diffs) {
             const message = "There was an error while comparing differences!";

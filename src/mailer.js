@@ -72,7 +72,7 @@ class Mailer {
     
     html += "</ul>";
     
-    return await _mail({
+    return await this._mail({
       to: this.mailTo,
       subject: "Changes in the EPSO jobs opportunities!",
       text: "There are new job opportunities!",
@@ -85,7 +85,7 @@ class Mailer {
    * @return {object} object containing information about sent email
    */
   async mailError() {
-    return await _mail({
+    return await this._mail({
       to: this.mailToDeveloper,
       subject: "EPSO cron error",
       text: "There was an error executing EPSO cron", // plain text body
