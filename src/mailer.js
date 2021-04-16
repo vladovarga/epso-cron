@@ -56,7 +56,7 @@ class Mailer {
   
   /**
    * Mails new job opportunities.
-   * @param {Array} newJobOpportunities - an array of titles of new job opportunities
+   * @param {Array} newJobOpportunities - an array of objects of new job opportunities. Job opportunity consists of text and link to the job detail.
    * @return {object} object containing information about sent email
    */
   async mailOpportunities(newJobOpportunities) {
@@ -67,8 +67,14 @@ class Mailer {
 
     // build up HTML body of the email
     let html = "<ul>";
-    
-    newJobOpportunities.forEach(opportunity => html += '<li>' + opportunity + '</li>');
+
+    const epsoURL = new URL(process.env.URL_TO_CRAWL);
+
+    newJobOpportunities.forEach(opportunity => { 
+      const jobURL = new URL(opportunity.href, epsoURL.origin);
+
+      html += '<li><a href="' + jobURL.href + '" target="_blank">' + opportunity.text + '</a></li>'
+    });
     
     html += "</ul>";
     

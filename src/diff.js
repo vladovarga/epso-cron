@@ -32,7 +32,7 @@ function run() {
     // diff previous and latest
     let differences = Diff.diffTrimmedLines(previous, latest);
 
-    // console.log(differences);
+    // console.log("differences", differences);
 
     // filter out only those which were added
     let onlyAdded = differences.filter(difference => (difference.added == true));
@@ -48,15 +48,27 @@ function run() {
     for (const addedObject of onlyAdded) {
         if (addedObject.count == 1) {
             // if the count is 1 => return just the value
-            result.push(addedObject.value);
+            const splitOutput = addedObject.value.split("|");
+            result.push({
+                "text": splitOutput[0],
+                "href": splitOutput[1]
+                
+            });
         } else if (addedObject.count > 1) {
-            // if the count is > 1 => split the value by new line and merge the arrays
-            result = result.concat(addedObject.value.split("\n"));
+            // if the count is > 1 => split the value by new line 
+            addedObject.value.split("\n").forEach(function(opportunity) {
+                const splitOutput = opportunity.split("|");
+                result.push({
+                    "text": splitOutput[0],
+                    "href": splitOutput[1]
+                    
+                });
+            });
         }
     }
 
     // filter out empty strings
-    result = result.filter(opportunity => (opportunity != ""));
+    result = result.filter(opportunity => (opportunity.text != ""));
 
     // return the result
     return result;

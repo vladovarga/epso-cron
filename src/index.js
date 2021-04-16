@@ -54,7 +54,7 @@
 
         const diffs = diff.run();
 
-        console.log("Diff completed.");
+        console.log("Diff completed.", diffs);
 
         const { mailer } = require('./mailer');
 

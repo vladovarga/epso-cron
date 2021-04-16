@@ -69,11 +69,18 @@ function getPromise() {
 
                 const dom = new JSDOM(body);
                 
-                let jobList = "";
+                let jobList = "";   // plain text list
+                let result = [];    // array of objects
 
                 // find all the <a> tags containing a job title
 
-                dom.window.document.querySelectorAll("td.views-field-title-field > a").forEach(a => jobList += a.text + "\n" );
+                dom.window.document.querySelectorAll("td.views-field-title-field > a").forEach(function(a) {
+                    jobList += a.text + "|" + a.href + "\n";
+                    result.push({
+                        "text": a.text,
+                        "href": a.href,
+                    });
+                });
 
                 // write down list of current job opportunities into latest.txt
 
@@ -88,7 +95,7 @@ function getPromise() {
                 });
 
                 // promise resolved on success
-                resolve(jobList);
+                resolve(result);
             });
         }).on('error', (e) => {
             mailer.mailError();
