@@ -74,7 +74,7 @@ function getPromise() {
 
                 // find all the <a> tags containing a job title
 
-                dom.window.document.querySelectorAll("td.views-field-title-field > a").forEach(function(a) {
+                dom.window.document.querySelectorAll("td.views-field-title > a").forEach(function(a) {
                     jobList += a.text + "|" + a.href + "\n";
                     result.push({
                         "text": a.text,
