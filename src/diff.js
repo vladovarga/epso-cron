@@ -28,9 +28,15 @@ function run() {
 
     // console.log("previous", previous);
     // console.log("latest", latest);
+    
+    // sort alphabetically
+
+    const previousSorted = previous.split(/\r?\n/).sort().join(/\r\n/);
+    const latestSorted = latest.split(/\r?\n/).sort().join(/\r\n/);
 
     // diff previous and latest
-    let differences = Diff.diffTrimmedLines(previous, latest);
+
+    let differences = Diff.diffTrimmedLines(previousSorted, latestSorted);
 
     // console.log("differences", differences);
 

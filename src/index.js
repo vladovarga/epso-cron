@@ -65,7 +65,6 @@
             throw new Error(message);
         } else if (diffs.length == 0) {
             console.log("There were no new job opportunities");
-            return;
         } else if (diffs.length > 0) {
             console.log("There are new opportunities!!", diffs);
 
