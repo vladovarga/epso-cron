@@ -31,8 +31,11 @@ function run() {
     
     // sort alphabetically
 
-    const previousSorted = previous.split(/\r?\n/).sort().join(/\r\n/);
-    const latestSorted = latest.split(/\r?\n/).sort().join(/\r\n/);
+    const previousSorted = previous.split(/\n/).sort().join('\n');
+    const latestSorted = latest.split(/\n/).sort().join('\n');
+
+    // console.log("previousSorted", previousSorted);
+    // console.log("latestSorted", latestSorted);
 
     // diff previous and latest
 
