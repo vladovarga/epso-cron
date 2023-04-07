@@ -1,3 +1,5 @@
+**!!! This branch now just serves as an archive for the code in the form as it was deployed on Heroku !!!**
+
 # EPSO cron
 Cron job that checks regularly the EPSO website for new job opportunities and emails you if something new appears...
 
