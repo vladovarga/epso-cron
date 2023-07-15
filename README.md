@@ -5,15 +5,10 @@ Cron job that checks regularly the EPSO website for new job opportunities and em
 
 Settings are defined as env variables. They can be defined using an .env file or .env.defaults file.
 
-* CRON_EXPRESSION - cron expression to define how often the crawler should run
 * URL_TO_CRAWL - URL to be crawled
-* DOWNLOADS_PATH - where the downloaded .html files, previous.txt, latest.txt will be stored
+* DOWNLOADS_PATH - where the downloaded raw .html files will be stored
 
 ### Mail settings
 
-* MAIL_HOST - SMTP server host
-* MAIL_PORT - SMTP server port
-* MAIL_USER - user name for the SMTP server
-* MAIL_PASS - password for the SMTP server
 * MAIL_TO - email addresses to notify. Separated by comma
 * MAIL_TO_DEVELOPER - developer email addresses to notify when an error occurs. Separated by comma

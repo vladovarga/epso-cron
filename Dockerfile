@@ -1,4 +1,4 @@
-FROM node:14.15.4-alpine3.12
+FROM node:18-alpine3.17
 
 # Go to app directory
 WORKDIR /app/src
@@ -8,7 +8,7 @@ WORKDIR /app/src
 # where available (npm@5+)
 COPY package*.json ../
 
-COPY .env.defaults ../
+# COPY .env.defaults ../
 
 # npm install
 # If you are building your code for production

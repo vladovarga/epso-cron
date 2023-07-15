@@ -107,5 +107,6 @@ dist
 *.code-workspace
 downloads/*
 downloads
-src/somarina.js
+src/spustac.js
 tipy-triky.txt
+to-do

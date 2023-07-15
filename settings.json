@@ -1,0 +1,44 @@
+{
+    "cities": [
+        {
+            "id": 1149,
+            "code": "brussels",
+            "name": "Brussels"
+        },
+        {
+            "id": 1223,
+            "code": "bratislava",
+            "name": "Bratislava"
+        },
+        {
+            "id": 1167,
+            "code": "ispra",
+            "name": "Ispra"
+        },
+        {
+            "id": 1190,
+            "code": "parma",
+            "name": "Parma"
+        },
+        {
+            "id": 1217,
+            "code": "rome",
+            "name": "Rome"
+        },
+        {
+            "id": 1172,
+            "code": "turin",
+            "name": "Turin"
+        },
+        {
+            "id": 1185,
+            "code": "other",
+            "name": "Other EU cities"
+        },
+        {
+            "id": 1209,
+            "code": "vienna",
+            "name": "Vienna"
+        }
+    ]
+}

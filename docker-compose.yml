@@ -1,0 +1,15 @@
+version: '3.8'
+
+services:
+  app:
+    build: .
+    environment:
+      REGION: ${REGION}
+      BUCKET: ${BUCKET}
+
+      URL_TO_CRAWL: ${URL_TO_CRAWL}
+      DOWNLOADS_PATH: ${DOWNLOADS_PATH}
+      
+      MAIL_TO: ${MAIL_TO}
+      MAIL_TO_DEVELOPER: ${MAIL_TO_DEVELOPER}
+

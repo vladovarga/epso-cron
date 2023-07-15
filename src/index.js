@@ -1,84 +1,102 @@
-(async function() {
-    console.log("Testing ...");
+// https://docs.aws.amazon.com/AWSJavaScriptSDK/v3/latest/index.html
 
-    const test = require('./test');
+require('dotenv').config();
 
-    await test.run();
+const { REGION, BUCKET, LATEST_FILE_NAME, PREVIOUS_FILE_NAME, settings } = require('./env');
 
-    console.log("Testing completed.");
+exports.handler = async (event) => {
+// (async function() {
 
-    console.log("Initializing ...");
+    // no need for initialization - has been done manually - creating previous.txt, latest.txt, downloads folder
 
-    const init = require('./init');
+    const { mailer } = require('./mailer');
 
-    await init.run();
+    // 1. step - Crawl the website
+    console.log("Running crawler ...");
 
-    console.log("Initializing completed.");
+    const crawler = require('./crawler');
 
-    const cron = require('node-cron');
+    console.time("crawler");
 
-    console.log('Used cron expression', process.env.CRON_EXPRESSION);
+    for (let i = 0; i < settings.cities.length; i++) {
+        const city = settings.cities[i]
 
-    const validateOutput = cron.validate(process.env.CRON_EXPRESSION);
+        console.time("crawling-" + city.code)
 
-    if (!validateOutput) {
-        const msg = "Cron expression is not valid!";
-        console.error(msg, process.env.CRON_EXPRESSION);
-        throw new Error(msg);
+        const crawlerOutput = await crawler.run(city)
+
+        console.timeEnd("crawling-" + city.code)
     }
 
-    console.log('Cron expression is valid');
+    console.timeEnd("crawler");
 
-    cron.schedule(process.env.CRON_EXPRESSION, async () => {
-        console.log('Running cron job');
+    console.log("Crawling completed.");
 
-        await job();
+    // 2. step - See if there are some new jobsß
+    console.log("Running diff ...");
+    
+    const diff = require('./diff');
 
-        console.log("Cron job completed.");
-    }, {
-        timezone: "Europe/Bratislava"
-    });
+    let diffs = {};
 
-    async function job() {
-        console.log("Running crawler ...");
+    console.time("diff");
 
-        const crawl = require('./crawl');
+    for (let i = 0; i < settings.cities.length; i++) {
+        const city = settings.cities[i]
 
-        const crawlOutput = await crawl.run();
+        const diffOutput = await diff.run(city);
 
-        console.log("Crawling completed.");
-
-        console.log("Running diff ...");
-
-        const diff = require('./diff');
-
-        const diffs = diff.run();
-
-        console.log("Diff completed.", diffs);
-
-        const { mailer } = require('./mailer');
-
-        if (!diffs) {
+        if (!diffOutput) {
             const message = "There was an error while comparing differences!";
-            console.error(message, diffs);
-            mailer.mailError();
+            console.error(message, diffOutput);
+            await mailer.mailError();
             throw new Error(message);
-        } else if (diffs.length == 0) {
-            console.log("There were no new job opportunities");
-        } else if (diffs.length > 0) {
-            console.log("There are new opportunities!!", diffs);
-
-            console.log("Sending emails ... ");
-
-            await mailer.mailOpportunities(diffs);
-
-            console.log("Emails sent.");
+        } else if (diffOutput.length == 0) {
+            console.log("There were no new job opportunities for city", city.name);
+            continue
+        } else if (diffOutput.length > 0) {
+            console.log("There are new opportunities for city", city.name, diffOutput);
+            diffs[city.code] = diffOutput
         }
-
-        console.log("Latest list becomes the previous");
-
-        const fs = require('fs');
-        
-        fs.copyFileSync(process.env.DOWNLOADS_PATH + 'latest.txt', process.env.DOWNLOADS_PATH + 'previous.txt');
     }
-}) ();
+
+    console.timeEnd("diff");
+
+    console.log("Diff completed.", diffs);
+    
+    // 3. step - Send emails
+
+    console.time("emails");
+
+    if (Object.keys(diffs).length > 0) {
+        console.log("Sending emails ... ");
+        
+        await mailer.mailOpportunities(diffs);
+        
+        console.log("Emails sent.");
+    }
+    
+    console.timeEnd("emails");
+
+    // 4. step - update previous.txt
+    console.log("Latest list becomes the previous");
+    const { S3Client, CopyObjectCommand } = require("@aws-sdk/client-s3"); // CommonJS
+    const s3Client = new S3Client({region: REGION});
+    
+    console.time("copying");
+
+    for (let i = 0; i < settings.cities.length; i++) {
+        const city = settings.cities[i]
+
+        const copyCommand = new CopyObjectCommand({
+            Bucket: BUCKET,
+            CopySource: BUCKET + "/" + city.code + "/" + LATEST_FILE_NAME,
+            Key: city.code + "/" + PREVIOUS_FILE_NAME
+        });
+        
+        const copyResponse = await s3Client.send(copyCommand);
+    }
+    
+    console.timeEnd("copying");
+};
+// })();

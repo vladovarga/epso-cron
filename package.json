@@ -1,11 +1,10 @@
 {
   "name": "epso-jobs-cron",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "description": "Cron job that downloads the list of available jobs from the https://epso.europa.eu/job-opportunities website, compares them with the previous download and in a case of differences sends an email.",
   "main": "index.js",
   "scripts": {
-    "test": "node src/test.js",
-    "start": "node src/index.js"
+    "start": "node src/spustac.js"
   },
   "keywords": [
     "cron",
@@ -14,10 +13,11 @@
   "author": "varga.vlad@gmail.com",
   "license": "ISC",
   "dependencies": {
-    "diff": "^5.0.0",
-    "dotenv-defaults": "^2.0.1",
-    "jsdom": "^16.5.1",
-    "node-cron": "^3.0.0",
-    "nodemailer": "^6.5.0"
+    "@aws-sdk/client-s3": "^3.309.0",
+    "@aws-sdk/client-sesv2": "^3.309.0",
+    "diff": "^5.1.0",
+    "dotenv": "^16.0.3",
+    "inspirational-quotes": "^2.0.1",
+    "jsdom": "^21.1.1"
   }
 }

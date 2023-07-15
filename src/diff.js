@@ -1,33 +1,54 @@
+console.log('Loading differ');
+
+const Diff = require('diff');
+
+const { REGION, BUCKET, LATEST_FILE_NAME, PREVIOUS_FILE_NAME } = require('./env');
+
+const { S3Client, GetObjectCommand } = require("@aws-sdk/client-s3"); // CommonJS
+const s3Client = new S3Client({region: REGION});
+
 /**
  * Checks for differences between previous and latest job list. 
  * If there are some new job opportunities, it returns them in an array.
  * @return {Array} an array of new job opportunities
  */
-function run() {
-    const Diff = require('diff');
-    const fs = require('fs');
-    const { mailer } = require('./mailer');
-
+module.exports.run = async function run(cityObj) {
     // read latest.txt from this cron run
-    let latest = fs.readFileSync(process.env.DOWNLOADS_PATH + 'latest.txt', 'utf8', (err, data) => {
-        if (err) {
-            mailer.mailError();
-            console.error('Could not find latest.txt!');
-            throw err;
-        }
+
+    const getCommand = new GetObjectCommand({
+        Bucket: BUCKET,
+        Key: cityObj.code + "/" + LATEST_FILE_NAME
     });
 
+    const getResponse = await s3Client.send(getCommand);
+
+    let latest = await getResponse.Body.transformToString();  
+
+    // console.log("latest", latest);
+    
     // read previous.txt from previous cron run
-    let previous = fs.readFileSync(process.env.DOWNLOADS_PATH + 'previous.txt', 'utf8', (err, data) => {
-        if (err) {
-            mailer.mailError();
-            console.error('Could not find previous.txt!');
-            throw err;
-        }
+    const getCommand2 = new GetObjectCommand({
+        Bucket: BUCKET,
+        Key: cityObj.code + "/" + PREVIOUS_FILE_NAME
     });
+
+    let getResponse2
+
+    try{
+        getResponse2 = await s3Client.send(getCommand2);
+    } catch (e) {
+        if (e.name === "NoSuchKey") {
+            console.log("Previous file does not exist, returning empty diff")
+            return []
+        } else {
+            console.log("Unknown expcetion, throwing further")
+            throw e
+        }
+    }
+
+    let previous = await getResponse2.Body.transformToString();  
 
     // console.log("previous", previous);
-    // console.log("latest", latest);
     
     // sort alphabetically
 
@@ -82,7 +103,3 @@ function run() {
     // return the result
     return result;
 }
-
-module.exports = {
-    "run": run
-};
